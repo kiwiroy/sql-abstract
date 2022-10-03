@@ -11,6 +11,12 @@ is_deeply(
   [ sort qw(select update insert delete) ],
 );
 
+subtest 'not again' => sub {
+  my @clauses = $sqlac->clauses_of('select');
+  my $sqlac = $sqlac->clone->plugin('+ExtraClauses');
+  is_deeply [$sqlac->clauses_of('select')], \@clauses, 'one copy';
+};
+
 my ($sql, @bind) = $sqlac->select({
   select => [ qw(artist.id artist.name), { -json_agg => 'cd' } ],
   from => [

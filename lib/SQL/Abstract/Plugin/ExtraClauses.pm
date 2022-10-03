@@ -8,6 +8,7 @@ sub register_extensions {
   my ($self, $sqla) = @_;
 
   my @clauses = $sqla->clauses_of('select');
+  return $sqla if (!!(grep { m/^with$/ } @clauses));
   my @before_setop;
   CLAUSE: foreach my $idx (0..$#clauses) {
     if ($clauses[$idx] eq 'order_by') {
